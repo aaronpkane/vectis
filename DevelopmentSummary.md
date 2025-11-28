@@ -69,6 +69,93 @@ Defines all capability structures.
 * Recency models (time-sensitive mastery requirements)
 * RoleProfiles (bundles of required competencies)
 
+---
+
+## **2. Compliance & Policy Engine**
+
+Responsible for rules governing compliance.
+
+**Elements:**
+
+* ComplianceRule
+* PolicyCycle
+* Expiration windows
+* Renewal requirements
+* Audit logs
+* ProgramStatus
+
+---
+
+##**
+*A living design document for the development of VECTIS — the universal competency and compliance engine.*
+
+---
+
+## **Core Product Thesis (Locked)**
+
+> **VECTIS gives organizations real-time clarity into true capability, while automatically enforcing all compliance requirements through a built-in, inspection-ready training framework.**
+
+This thesis governs every architectural and design decision.
+
+---
+
+# **Design Principles (Non‑Negotiable)**
+
+VECTIS must adhere to the following constraints across all engines and workflows:
+
+### **1. Neutral Terminology**
+
+No baked-in military, corporate, or educational jargon.
+
+### **2. Modular Competency Frameworks**
+
+Competencies composed of tasks/subtasks, reusable across domains.
+
+### **3. Flexible Verification Rules**
+
+Evaluations may be scored, pass/fail, rubric-based, or evidence-based.
+
+### **4. Configurable Roles & Permissions**
+
+Organizations define their own hierarchy and authority chains.
+
+### **5. Pluggable Evaluation Criteria**
+
+Evaluation structures attach to tasks, competencies, or training events.
+
+### **6. Exportable, Integration-Ready Data Models**
+
+Structured for API export, BI tools, HRIS/LMS integration, and calendar sync.
+
+### **7. Universal KPIs**
+
+Readiness, capability, recency, throughput — useful across all industries.
+
+### **8. Compliance Logic = Competency Logic**
+
+Compliance is a first-class rule engine, not a reporting layer.
+
+---
+
+# **The 8 Engines of VECTIS**
+
+These engines represent the core logical subsystems of the platform.
+
+---
+
+## **1. Competency Model Engine**
+
+Defines all capability structures.
+
+**Elements:**
+
+* Competency
+* Task / Subtask
+* ProficiencyLevel
+* Prerequisites & dependency chains
+* Recency models (time-sensitive mastery requirements)
+* RoleProfiles (bundles of required competencies)
+
 This engine defines *what it means* to be qualified.
 
 ---
