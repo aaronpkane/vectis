@@ -86,7 +86,314 @@ Responsible for rules governing compliance.
 
 ---
 
-##**
+## **3. Identity, Roles & Org Graph Engine**
+
+Defines the human and organizational structure.
+
+**Elements:**
+
+* User
+* OrgUnit
+* Position
+* PermissionSet
+* AssignedRoleProfile
+
+---
+
+## **4. Evidence & Verification Engine**
+
+The trust layer.
+
+**Elements:**
+
+* EvaluationEvent
+* Evidence (files, photos, signatures, notes)
+* VerificationStep
+* Verifier
+* Digital attestation
+* Re-verification triggers
+
+---
+
+## **5. Readiness, KPIs & Analytics Engine**
+
+Transforms raw capability data into actionable insight.
+
+**KPIs Include:**
+
+* Individual readiness
+* Role coverage
+* Recency decay
+* Time-to-qualify
+* Evaluation throughput
+* Compliance risk
+
+---
+
+## **6. Workflow & Events Engine**
+
+Automation and task orchestration.
+
+**Elements:**
+
+* Trigger
+* WorkflowRule
+* Task
+* Notification
+* Escalation
+
+---
+
+## **7. Integration & Data Layer**
+
+Ensures interoperability and external system support.
+
+**Elements:**
+
+* ImportMapping
+* Export templates
+* Calendar sync adapters
+* LMS/HRIS connectors
+* Data warehouse export
+* ModelVersioning
+
+---
+
+## **8. Training Mission Engine**
+
+A structured training campaign system.
+
+### **Training Mission Structure**
+
+* mission_id
+* competency_id or role_profile_id
+* title, description
+* start/end dates
+* instructors
+* participants
+* event_list
+* mission_status
+* auto-calendar-sync flag
+
+### **Training Event Structure**
+
+* event_id
+* mission_id
+* task_id(s)
+* instructor
+* participants
+* start/end time
+* location
+* evaluation_required?
+* evidence_required?
+* event_status
+
+### **Evaluation Record Structure**
+
+* evaluation_id
+* event_id
+* participant_id
+* task_id
+* outcome
+* evidence attachments
+* verifier + signature
+* verification_status
+
+---
+
+# **Daily Workflow: Training Manager Perspective**
+
+A Training Manager (TM) with 160 personnel uses VECTIS as follows:
+
+### **1. Log in → Unit Readiness Dashboard**
+
+Shows:
+
+* Capability gaps
+* Compliance risk
+* Expiring competencies
+* Pending evaluations
+* Mission progress
+* Role coverage deficits
+
+### **2. Handle Critical Items**
+
+* Renewals
+* Expirations
+* Required evaluations
+* Instructor assignments
+
+### **3. Launch or Manage Training Missions**
+
+* Build mission (tasks → events → participants)
+* Launch
+* Calendar sync
+* Auto-generated evaluation tasks
+
+### **4. Process Evaluations**
+
+* Review instructor submissions
+* Verify evidence
+* Approve or reject
+* Competency & compliance update automatically
+
+### **5. Generate Readiness / Inspection Reports**
+
+* Full compliance breakdown
+* Role coverage
+* Expiring quals
+* Missing evidence
+
+---
+
+# **MVP USERS (Locked)**
+
+### **System Admin**
+
+* Seeds competency catalog
+* Creates units
+* Assigns Unit Admins
+
+### **Unit Admin**
+
+* Manages members
+* Assigns positions & RoleProfiles
+* Oversees instructor permissions
+* Read-only access to compliance & readiness
+
+### **Training Manager**
+
+* Creates & launches Training Missions
+* Builds Training Events
+* Approves evaluations
+* Runs readiness & compliance reports
+* Manages mission schedules
+* Assigns competencies linked to roles for members
+
+### **Instructor**
+
+* Conducts training events
+* Marks attendance
+* Submits evaluations & evidence
+* Views assigned missions/events
+
+### **Member**
+
+* Views training schedule
+* Views qualification status
+* Receives notifications
+
+---
+
+# **MVP CAPABILITIES (Locked)**
+
+### **1. Backend Architecture**
+
+* Postgres relational schema
+* Full migrations
+* Logging + audit trails
+* Transaction-safe evaluation logic
+* Background worker for workflow tasks
+
+### **2. RBAC Security**
+
+* Role hierarchy
+* Permission sets scoped by unit
+* JWT auth with refresh
+* Enforcement at API & UI
+
+### **3. Competency Engine**
+
+* CRUD: competencies, tasks, proficiency levels, recency models, RoleProfiles
+* Auto-derivation of required competencies from roles
+
+### **4. Training Mission Engine**
+
+* Mission creation from competency or role
+* Event builder
+* Instructor + participant assignment
+* Mission launch logic
+* ICS-based calendar sync
+
+### **5. Training Events**
+
+* Attendance tracking
+* Evaluation-required flags
+* Timeline & list views
+
+### **6. Evaluations & Evidence**
+
+* Pass/fail/score
+* Evidence upload
+* Digital signatures
+* Minimal verification flow
+
+### **7. Readiness & Compliance**
+
+* Compute current/expired/in-grace
+* Mission progress tracking
+* Role coverage
+* Unit readiness dashboards
+* CSV/PDF export
+
+### **8. Workflow Engine**
+
+* Expiration reminders
+* Pending evaluation alerts
+* Mission deadline alerts
+
+### **9. UI/UX Requirements**
+
+* TM dashboard
+* Instructor event views
+* Member self-view
+* Clean, modern, responsive UI
+
+---
+
+# **MVP NON-GOALS (Locked)**
+
+* No multi-unit support
+* No deep MS Graph integration (ICS only)
+* No mobile app
+* No curriculum builder
+* No instructor-certification rules
+* No multi-org analytics
+* No drag-and-drop competency designer
+* No training-content delivery
+
+---
+
+# **Status Tracker**
+
+### **Completed**
+
+* Core thesis
+* Design principles
+* Eight-engine architecture
+* Daily workflow
+* Full MVP scope (users, capabilities, non-goals)
+
+### **In Progress**
+
+* Competency Model Engine specifications
+
+### **Next Step**
+
+Define the **Competency Model Engine** at field-level detail:
+
+* Competency
+* Task
+* ProficiencyLevel
+* RequirementSet
+* RoleProfile
+* RecencyModel
+
+This will anchor the rest of the architecture.
+
+---
+
+This document will continue to evolve as VECTIS takes shape.**
 *A living design document for the development of VECTIS — the universal competency and compliance engine.*
 
 ---
