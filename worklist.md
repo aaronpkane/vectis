@@ -155,6 +155,8 @@ Lock:
 
 [] DB schema
 
+*Plan out all competencies that will be tracked, not only LE quals*
+
 [] CRUD
 
 [] RoleProfiles
