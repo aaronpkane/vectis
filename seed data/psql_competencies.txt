@@ -1,0 +1,10 @@
+INSERT INTO competencies (code, name)
+VALUES ('STWATCH', 'Security Team Watchstander'),
+('BTM', 'Boarding Team Member'),
+('BO', Boarding Officer'),
+('MCTCBO', 'Maritime Counter Trafficking Boarding Officer'),
+('ICMLEO', 'Integrated Cross-Border Maritime Law Enforcement Officer'),
+('PWCSBO', 'Ports Waterways Coastal Security Boarding Officer'),
+('GMTA', 'General Mandated Training - A'),
+('GMTB', 'General Mandated Training - B')
+RETURNING id;

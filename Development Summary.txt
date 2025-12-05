@@ -1,0 +1,322 @@
+# **VECTIS Development Summary**
+
+*A living design document for the development of VECTIS — the universal competency and compliance engine.*
+
+*Contact: aaronpkane@yahoo.com*
+
+---
+
+## **Core Product Thesis (Locked)**
+
+> **VECTIS gives organizations real-time clarity into true capability, while automatically enforcing all compliance requirements through a built-in, inspection-ready training framework.**
+
+This remains the guiding principle of all system architecture and workflow design.
+
+---
+
+# **Design Principles (Non‑Negotiable)**
+
+VECTIS must adhere to the following constraints across all engines and workflows:
+
+### **Neutral Terminology**
+
+No domain‑specific jargon baked into the underlying model.
+
+### **Modular Competency Structure**
+
+Competencies composed of tasks; reusable, flexible, non-prescriptive.
+
+### **Flexible Verification Logic**
+
+Pass/fail or scored evaluations with evidence support.
+
+### **Configurable Roles & Permissions**
+
+RBAC determines access; permissions scoped per unit.
+
+### **Exportable, Integration-Ready Models**
+
+Clean API-ready structures; simple ICS calendar sync for MVP.
+
+### **Universal Readiness & Compliance KPIs**
+
+Accurate, inspection-ready metrics for individuals and units.
+
+### **Compliance Logic = Competency Logic**
+
+Compliance is computed directly from competency recency and evaluation history.
+
+---
+
+# **The 8 Engines of VECTIS**
+
+These engines represent the core logical subsystems of the platform.
+
+## **1. Competency Model Engine**
+
+Defines what capability *is*.
+
+**Tables (MVP):**
+
+* `competencies`
+* `tasks`
+* `recency_models`
+* `competency_recency_policies`
+* `role_profiles` (now used as **rate-based templates**)
+* `role_profile_competencies`
+
+**Purpose:**
+
+* Define competencies, tasks, default recency rules.
+* Define rate-based templates for automatic initial competency assignment.
+
+---
+
+## **2. Compliance & Policy Engine**
+
+Applies rules to determine whether a member is compliant.
+
+* Expiration logic (validity + grace windows)
+* Compliance state calculation (current / in-grace / expired)
+* Inspection-ready outputs
+
+---
+
+## **3. Identity, Roles & Org Graph Engine**
+
+Responsible for:
+
+* Users (members, instructors, training managers, admins)
+* Unit structure
+* Rate-based role profiles
+* **Member competency assignments** (unit-specific requirements)
+
+**Upcoming tables:**
+
+* `users`
+* `org_units`
+* `user_org_memberships`
+* `member_competency_assignments`
+
+---
+
+## **4. Evidence & Verification Engine**
+
+Captures:
+
+* Evaluations (pass/fail/score)
+* Evidence uploads
+* Verification/sign-off trails
+
+---
+
+## **5. Readiness, KPIs & Analytics Engine**
+
+Provides visibility:
+
+* Individual readiness
+* Unit readiness
+* Role coverage
+* Mission progress
+* Compliance risk
+
+---
+
+## **6. Workflow & Events Engine**
+
+Automation layer:
+
+* Expiration reminders
+* Evaluation reminders
+* Mission deadlines
+* Notification triggers
+
+---
+
+## **7. Integration & Data Layer**
+
+MVP integrations:
+
+* ICS-based calendar sync
+* Export/Import (CSV)
+* Clean API boundaries for the future
+
+---
+
+## **8. Training Mission Engine**
+
+A structured campaign engine for delivering competency-driven training.
+
+**Mission Structure:**
+
+* mission_id
+* competency_id(s)
+* rate-profile‑based participant assignment
+* events
+* instructors
+* mission status
+
+**Event Structure:**
+
+* event_id
+* mission_id
+* task linkage
+* attendance tracking
+* evaluation requirements
+
+---
+
+# **Daily Workflow: Training Manager Perspective**
+
+1. View unit readiness dashboard.
+2. Process expirations & required evaluations.
+3. Launch missions and events.
+4. Approve evaluations & review evidence.
+5. Export compliance/readiness reports.
+
+---
+
+# **MVP USERS (Locked)**
+
+### **System Admin**
+
+* Seeds competency catalog and rate templates
+* Creates unit(s)
+* Assigns Unit Admins
+
+### **Unit Admin**
+
+* Manages members
+* Assigns rate (role_profile)
+* Manages instructor permissions
+* Read-only access to readiness/compliance
+
+### **Training Manager**
+
+* Creates/launches missions
+* Builds events
+* Approves evaluations
+* Oversees member competency assignments
+* Produces readiness & compliance reports
+
+### **Instructor**
+
+* Conducts events
+* Marks attendance
+* Submits evaluations & evidence
+
+### **Member**
+
+* Views training schedule
+* Views qualification status
+* Receives notifications
+
+---
+
+# **MVP CAPABILITIES (Locked)**
+
+### **Backend Architecture**
+
+* PostgreSQL relational schema
+* All engines modularized
+* Audit logging foundation
+* Transaction-safe evaluation updates
+* Background workers for workflow
+
+### **RBAC Security**
+
+* Strict role separation
+* Unit-scoped permissions
+* JWT auth + refresh
+* Enforcement at API & UI
+
+### **Competency Engine**
+
+* CRUD for competencies, tasks, recency
+* Rate-based templates via role_profiles
+* Automatic assignment seeding when a member joins a unit
+
+### **Training Missions**
+
+* Mission creation, event planning
+* Instructor & member assignment
+* Launch workflow
+* ICS calendar sync
+
+### **Evaluations & Evidence**
+
+* Pass/fail/score
+* Evidence upload
+* Verification workflow
+
+### **Readiness & Compliance**
+
+* Recency-driven compliance states
+* Mission progress
+* Unit readiness
+* Exportable reports
+
+### **Workflow Engine**
+
+* Expiration alerts
+* Evaluation reminders
+* Mission deadlines
+
+### **UI/UX Requirements**
+
+* Clean dashboard
+* Instructor event workflow
+* Member self-service view
+* Responsive, professional interface
+
+---
+
+# **MVP NON-GOALS (Locked)**
+
+* No multi-unit enterprise support
+* No deep MS Graph integration (ICS only)
+* No mobile app
+* No curriculum builder
+* No instructor-certification logic
+* No multi-org analytics
+* No drag-and-drop editors
+* No LMS-style content delivery
+
+---
+
+# **Completed So Far**
+
+* Full system thesis
+* 8-engine architecture
+* MVP scope (users, capabilities, non-goals)
+* Competency Model Engine schema
+* PostgreSQL environment initialized
+* Competency tables created in database
+* Decision on rate-based templates retained (`role_profiles`)
+* Future-proof design for transfers & career history
+
+---
+
+# **Next Steps**
+
+### **1. Build the Identity & Assignment Engine (v1):**
+
+* `users`
+* `org_units`
+* `user_org_memberships`
+* `member_competency_assignments`
+
+### **2. Implement logic:**
+
+* New user onboarding → assign rate → auto-seed competency assignments
+* Assignment editor for Training Managers
+
+### **3. Then proceed to:**
+
+* Training Missions Engine schema
+* Events + evaluations
+* Compliance + readiness calculations
+
+---
+
+This document will continue evolving as VECTIS progresses from schema → logic → interface → deployment.
