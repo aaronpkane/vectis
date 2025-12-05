@@ -14,7 +14,7 @@
  public | users                         | table | vectis_admin
  (10 rows)
 
-CREATE TABLE competencies (
+CREATE TABLE competencies ( -- Master list of competencies
     id              BIGSERIAL PRIMARY KEY,
     code            VARCHAR(50) NOT NULL UNIQUE,
     name            VARCHAR(255) NOT NULL,
@@ -26,7 +26,7 @@ CREATE TABLE competencies (
 
 CREATE INDEX idx_competencies_is_active ON competencies (is_active);
 
-CREATE TABLE tasks (
+CREATE TABLE tasks ( -- Tasks associated with competencies
     id              BIGSERIAL PRIMARY KEY,
     competency_id   BIGINT NOT NULL REFERENCES competencies(id) ON DELETE CASCADE,
     code            VARCHAR(50) NOT NULL,
@@ -42,7 +42,7 @@ CREATE TABLE tasks (
 
 CREATE INDEX idx_tasks_competency_id ON tasks (competency_id);
 
-CREATE TABLE role_profiles (
+CREATE TABLE role_profiles ( -- Role profiles at organization
     id              BIGSERIAL PRIMARY KEY,
     code            VARCHAR(50) NOT NULL UNIQUE,
     name            VARCHAR(255) NOT NULL,
@@ -52,7 +52,7 @@ CREATE TABLE role_profiles (
     updated_at      TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
-CREATE TABLE role_profile_competencies (
+CREATE TABLE role_profile_competencies ( -- Competencies required for each role profile
     id                          BIGSERIAL PRIMARY KEY,
     role_profile_id             BIGINT NOT NULL REFERENCES role_profiles(id) ON DELETE CASCADE,
     competency_id               BIGINT NOT NULL REFERENCES competencies(id) ON DELETE RESTRICT,
@@ -65,7 +65,7 @@ CREATE TABLE role_profile_competencies (
 CREATE INDEX idx_rpc_role_profile_id ON role_profile_competencies (role_profile_id);
 CREATE INDEX idx_rpc_competency_id ON role_profile_competencies (competency_id);
 
-CREATE TABLE recency_models (
+CREATE TABLE recency_models ( -- Models defining recency/frequency policies
     id                  BIGSERIAL PRIMARY KEY,
     code                VARCHAR(50) NOT NULL UNIQUE,
     name                VARCHAR(255) NOT NULL,
@@ -80,7 +80,7 @@ CREATE TABLE recency_models (
         CHECK (grace_period_days >= 0)
 );
 
-CREATE TABLE competency_recency_policies (
+CREATE TABLE competency_recency_policies ( -- Recency policies per competency
     id                      BIGSERIAL PRIMARY KEY,
     competency_id           BIGINT NOT NULL REFERENCES competencies(id) ON DELETE CASCADE,
     recency_model_id        BIGINT NOT NULL REFERENCES recency_models(id),
@@ -101,7 +101,7 @@ CREATE INDEX idx_crp_recency_model_id
 
 -- IDENTITY AND MEMBERSHIP SCHEMA
 
-CREATE TABLE org_units (
+CREATE TABLE org_units ( -- Organizational units (hierarchical)
     id              BIGSERIAL PRIMARY KEY,
     parent_id       BIGINT REFERENCES org_units(id) ON DELETE SET NULL,
     code            VARCHAR(50) NOT NULL,
@@ -115,7 +115,7 @@ CREATE TABLE org_units (
 
 CREATE INDEX idx_org_units_parent_id ON org_units (parent_id);
 
-CREATE TABLE users (
+CREATE TABLE users ( -- System users / members
     id              BIGSERIAL PRIMARY KEY,
     external_id     VARCHAR(100),          -- for future SSO / HR integration
     email           VARCHAR(255),
@@ -129,7 +129,7 @@ CREATE TABLE users (
     CONSTRAINT uq_users_service_number UNIQUE (service_number)
 );
 
-CREATE TABLE user_org_memberships (
+CREATE TABLE user_org_memberships ( -- User memberships in org units
     id              BIGSERIAL PRIMARY KEY,
     user_id         BIGINT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
     org_unit_id     BIGINT NOT NULL REFERENCES org_units(id) ON DELETE CASCADE,
@@ -151,7 +151,7 @@ CREATE INDEX idx_user_org_memberships_user
 CREATE INDEX idx_user_org_memberships_org
     ON user_org_memberships (org_unit_id);
 
-CREATE TABLE member_competency_assignments (
+CREATE TABLE member_competency_assignments ( -- Competency assignments to members
     id                  BIGSERIAL PRIMARY KEY,
     membership_id       BIGINT NOT NULL
                         REFERENCES user_org_memberships(id) ON DELETE CASCADE,
@@ -171,3 +171,34 @@ CREATE INDEX idx_member_comp_assign_membership
 
 CREATE INDEX idx_member_comp_assign_competency
     ON member_competency_assignments (competency_id);
+
+BEGIN;
+
+-- Use this to create a sample user and assign role profile competencies automatically
+INSERT INTO users (first_name, last_name, email, service_number)
+VALUES ('Jane', 'Doe', 'jane.doe@example.com', 'SN-1234')
+RETURNING id;
+
+INSERT INTO user_org_memberships (user_id, org_unit_id, role_profile_id, is_primary, started_at)
+VALUES (10, 1, 2, TRUE, CURRENT_DATE)
+RETURNING id;
+
+INSERT INTO member_competency_assignments (
+    membership_id,
+    competency_id,
+    source,
+    is_required,
+    assigned_by_user_id
+)
+SELECT
+    25 AS membership_id,
+    rpc.competency_id,
+    'role_profile' AS source,
+    COALESCE(rpc.is_required, TRUE) AS is_required,
+    1 AS assigned_by_user_id
+FROM role_profile_competencies rpc
+WHERE rpc.role_profile_id = 2
+ON CONFLICT (membership_id, competency_id) DO NOTHING;
+
+COMMIT;
+
