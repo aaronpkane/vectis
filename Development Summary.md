@@ -48,6 +48,60 @@ Recency and evaluation data determine compliance.
 
 ---
 
+#Critical Cross-Engine Conventions
+
+## **1. Naming Conventions**
+
+To prevent schema drift:
+
+- Use is_mandatory only inside a structural model
+  Example: tasks within a competency; role_profile_competencies.
+
+- Use is_required only for assignment/relationship logic
+  Example: member_competency_assignments; mission members; event-task requirements.
+
+- Use status for workflow/lifecycle states
+  Example: missions, events, users.
+
+- Use consistent timestamps:
+
+`created_at`
+
+`updated_at`
+
+`started_at / ended_at`
+
+`check_in_at / check_out_at`
+
+*This consistency prevents ambiguity as engines expand.*
+
+## **2. Foreign Key Philosophy**
+
+VECTIS enforces strict referential integrity:
+
+- Use `ON DELETE CASCADE` when dependent data should vanish with the parent (memberships, attendance, mission links).
+
+- Use `ON DELETE SET NULL` only where historical context must survive loss of relationship.
+
+- Never allow orphaned competencies, evaluations, mission records, or membership references.
+
+*This prevents data corruption and keeps logic deterministic at scale.*
+
+## **3. Domain-Layer-First Rule**
+
+VECTIS is built in phases:
+
+- Phase 1: Domain backbone (Competencies → Memberships → Missions → Evaluations)
+
+- Phase 2: RBAC, API, Audit Logging, Separation Mechanics
+
+- Phase 3: Compliance, Workflow, KPIs, Integrations
+
+No API or RBAC work begins until all Phase 1 domain engines are stable.
+*This avoids API redesign churn and ensures clean separation of concerns.*
+
+---
+
 # **The 8 Engines of VECTIS**
 
 ---
@@ -340,4 +394,3 @@ Once applied, we'll define the Training Mission Engine’s core flows:
 
 This will complete Training Mission Engine v1.
 
-THIS IS A TEST..
